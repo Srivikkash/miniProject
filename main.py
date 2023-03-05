@@ -12,7 +12,6 @@ while True:
     ret,frame = cap.read()
     
     result = DeepFace.analyze(img_path= frame , actions=['emotion'], enforce_detection=False)
-    result = DeepFace.analyze(img_path=frame, actions=['emotion'], enforce_detection=False)
 
     gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
 
