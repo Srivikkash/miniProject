@@ -4,8 +4,8 @@ import imutils
 import numpy as np
 from centroidtracker import CentroidTracker
 
-protopath = "MobileNetSSD_deploy.prototxt"
-modelpath = "MobileNetSSD_deploy.caffemodel"
+protopath = "person_tracker/model/MobileNetSSD_deploy.prototxt"
+modelpath = "person_tracker/model/MobileNetSSD_deploy.caffemodel"
 detector = cv2.dnn.readNetFromCaffe(prototxt=protopath, caffeModel=modelpath)
 # Only enable it if you are using OpenVino environment
 # detector.setPreferableBackend(cv2.dnn.DNN_BACKEND_INFERENCE_ENGINE)
