@@ -2,7 +2,8 @@ import cv2
 import datetime
 import imutils
 import numpy as np
-from centroidtracker import CentroidTracker
+from person_tracker import centroidtracker
+from id_detection import detectId as dt
 
 protopath = "person_tracker/MobileNetSSD_deploy.prototxt"
 modelpath = "person_tracker/MobileNetSSD_deploy.caffemodel"
@@ -17,7 +18,7 @@ CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
            "dog", "horse", "motorbike", "person", "pottedplant", "sheep",
            "sofa", "train", "tvmonitor"]
 
-tracker = CentroidTracker(maxDisappeared=80, maxDistance=90)
+tracker = centroidtracker.CentroidTracker(maxDisappeared=80, maxDistance=90)
 
 
 def non_max_suppression_fast(boxes, overlapThresh):
@@ -61,8 +62,8 @@ def non_max_suppression_fast(boxes, overlapThresh):
         print("Exception occurred in non_max_suppression : {}".format(e))
 
 
-def main():
-    cap = cv2.VideoCapture(0)
+def main(cap):
+    # cap = cv2.VideoCapture(0)
 
     fps_start_time = datetime.datetime.now()
     fps = 0
@@ -103,8 +104,16 @@ def main():
             y1 = int(y1)
             x2 = int(x2)
             y2 = int(y2)
+            
+            result = dt.idValue(frame ,x1,y1,x2,y2)
+            score = round(max(result[-1])*100)
 
-            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 2)
+            if score > 70 :
+                cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+            else:
+                cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 2)
+
+
             text = "ID: {}".format(objectId)
             cv2.putText(frame, text, (x1, y1-5), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 0, 255), 1)
 
@@ -125,6 +134,3 @@ def main():
             break
 
     cv2.destroyAllWindows()
-
-
-main()
